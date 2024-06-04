@@ -1,0 +1,27 @@
+TOKEN "leaderboard_endpoint_read_8718" READ
+
+NODE get_all_scores
+SQL >
+
+    SELECT name AS player_id, 
+        timestamp,
+        session_id,
+        event
+    // FROM flappy_tinybird_workshop.events_api 
+    FROM mock_game_events
+    WHERE type = 'score'
+
+
+
+NODE aggregate
+SQL >
+
+    SELECT player_id, 
+      session_id, 
+      count() AS score
+    FROM get_all_scores
+    GROUP BY player_id, session_id
+    ORDER BY score DESC
+    LIMIT 10
+
+

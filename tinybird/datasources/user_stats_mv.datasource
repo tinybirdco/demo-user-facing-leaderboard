@@ -1,0 +1,13 @@
+# Data Source created from Pipe 'feed_user_stats_mv'
+
+SCHEMA >
+    `event` String,
+    `player_id` String,
+    `session_id` String,
+    `scores` AggregateFunction(countIf, UInt8),
+    `purchases` AggregateFunction(countIf, UInt8),
+    `start_ts` AggregateFunction(min, DateTime64(3)),
+    `end_ts` AggregateFunction(max, DateTime64(3))
+
+ENGINE "AggregatingMergeTree"
+ENGINE_SORTING_KEY "event, player_id, session_id"
