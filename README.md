@@ -1,4 +1,4 @@
-# Consume Tinybird API Endpoints in Next.js with JWTs
+# Build a user-facing leaderboard
 
 This repo contains a minimal example demonstrating:
 
