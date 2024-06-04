@@ -1,7 +1,8 @@
-# Consume Tinybird API Endpoints in Next.js with JWTs
+# Building a user-facing leaderboard
 
-This repo contains a minimal example demonstrating:
+This leaderboard demo's use of JSON Web Tokens (JWTs) is based on [this guide](https://github.com/tinybirdco/guide-nextjs-jwt-auth).
 
+That repo contains a minimal example demonstrating:
 1. Generating self-signed JWTs for Tinybird
 2. Consuming Tinybird API Endpoints in a Next.js frontend app using a self-signed JWT
 
