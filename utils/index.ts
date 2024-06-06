@@ -1,12 +1,18 @@
 const TINYBIRD_HOST = process.env.NEXT_PUBLIC_TINYBIRD_HOST ?? "https://api.tinybird.co";
 
-export function getEndpointUrl() {
+type Endpoint = "leaderboard" | "get_stats"; // Define a type for possible endpoints
 
-  // Constructing the URL for fetching data, including host, token, and date range
-  const endpointUrl = new URL(
-    "/v0/pipes/leaderboard.json",
-    TINYBIRD_HOST
-  );
+export function getEndpointUrl(endpoint: Endpoint): string {
+   
+  const baseUrl = `${TINYBIRD_HOST}/v0/pipes`;
 
-  return endpointUrl.toString();
+  // Conditional logic based on endpoint value
+  switch (endpoint) {
+    case "leaderboard":
+      return `${baseUrl}/leaderboard.json`;
+    case "get_stats":
+      return `${baseUrl}/get_stats.json`;
+    default:
+      throw new Error(`Invalid endpoint: ${endpoint}`);
+  }
 }
