@@ -5,9 +5,10 @@ SCHEMA >
     `player_id` String,
     `session_id` String,
     `scores` AggregateFunction(countIf, UInt8),
+    `games` AggregateFunction(countIf, UInt8),
     `purchases` AggregateFunction(countIf, UInt8),
     `start_ts` AggregateFunction(min, DateTime64(3)),
     `end_ts` AggregateFunction(max, DateTime64(3))
 
 ENGINE "AggregatingMergeTree"
-ENGINE_SORTING_KEY "event, player_id, session_id"
+ENGINE_SORTING_KEY "player_id, event, session_id"

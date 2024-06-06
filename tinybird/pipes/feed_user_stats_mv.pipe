@@ -6,6 +6,7 @@ SQL >
         name AS player_id,
         session_id,
         countIfState(type = 'score') AS scores,
+        countIfState(type = 'game_over') AS games,
         countIfState(type = 'purchase') AS purchases,
         minState(timestamp) AS start_ts,
         maxState(timestamp) AS end_ts

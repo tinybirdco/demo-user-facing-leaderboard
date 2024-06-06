@@ -14,13 +14,10 @@ SQL >
             session_id,
             countMerge(scores) AS total_score,
             maxMerge(end_ts) AS t
-        //FROM user_stats_mv
-        FROM mock_user_stats_mv
+        FROM user_stats_mv
+        //FROM mock_user_stats_mv
         WHERE
-            1
-            {% if defined(event_param) %}
-                AND event = {{ String(event_param, 'Austin Data Council', description="Event to filter on") }}
-            {% end %}
+            event = {{ String(event_param, 'workshop_2024_06_11', description="Event to filter on") }}
         GROUP BY player_id, session_id
         ORDER BY rank
 
@@ -38,7 +35,7 @@ SQL >
       FROM rank_games
       WHERE
           player_id
-          = {{ String(player_param, 'Jim', description="Player to filter on", required=True) }}
+          = {{ String(player_id, 'Jim', description="Player to filter on", required=True) }}
       GROUP BY player_id
 
 
@@ -59,6 +56,6 @@ SQL >
                 SELECT rank, player_id, session_id, total_score
                 FROM last_game
             )
-        ORDER BY rank
+        ORDER BY rank ASC
 
 
