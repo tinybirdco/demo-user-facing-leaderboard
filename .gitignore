@@ -1,0 +1,47 @@
+# Build artifacts
+node_modules/
+build/
+dist/
+lib/
+
+# Next.js build directory
+.next/
+
+# IDE specific files
+.vscode/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Testing files
+coverage/
+tests/
+
+# Temporary files
+*.log
+*.pid
+
+# Secret files
+.env*
+.secret*
+
+# API keys and secrets
+.env.local
+.env.development
+.env.production
+
+# TypeScript generated files
+*.js
+*.js.map
+
+# TypeORM or other ORM generated files (if applicable)
+*.entity.ts
+
+# Dependency lock files
+package-lock.json
+yarn.lock
+
+# Editor stuff for web based IDEs
+*.swp
+*.swo
