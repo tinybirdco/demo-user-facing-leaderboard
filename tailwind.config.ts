@@ -38,7 +38,7 @@ module.exports = {
           },
           content: {
             subtle: colors.gray[400],
-            DEFAULT: colors.gray[500],
+            DEFAULT: colors.gray[900],
             emphasis: colors.gray[700],
             strong: colors.gray[900],
             inverted: colors.white,
