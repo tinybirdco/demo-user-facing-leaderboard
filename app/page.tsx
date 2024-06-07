@@ -4,38 +4,50 @@ import { Table, Card, Subtitle, Text, Title, TableHead, TableRow, TableCell  } f
 import useSWR from "swr";
 import { getEndpointUrl } from "@/utils";
 import { useFetcher } from "@/hooks/useFetch";
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal, AwaitedReactNode } from "react";
 
-const REFRESH_INTERVAL_IN_MILLISECONDS = 1000; // five seconds
+const REFRESH_INTERVAL_IN_MILLISECONDS = 5000; // milliseconds
 
 export default function Dashboard() {
-  const endpointUrl = getEndpointUrl();
+  const leaderboardUrl = getEndpointUrl("leaderboard"); // Leaderboard endpoint
+  const statsUrl = getEndpointUrl("get_stats"); // Stats endpoint
   const fetcher = useFetcher(); // This fetcher handles the token revalidation
 
   // Initializes variables for storing data
-  let leaderboard, latency, errorMessage;
+  let leaderboard, stats, latency, errorMessage;
 
-  // Using SWR hook to handle state and refresh result every five seconds
-  const { data } = useSWR(endpointUrl, fetcher, {
+  // Using SWR hook to handle state for leaderboard
+  const { data: leaderboardData } = useSWR(leaderboardUrl, fetcher, {
     refreshInterval: REFRESH_INTERVAL_IN_MILLISECONDS,
     onError: (error) => (errorMessage = error),
   });
 
-  if (!data) return;
+ // Using SWR hook to handle state for stats
+ const { data: statsData } = useSWR(statsUrl, fetcher, {
+  refreshInterval: REFRESH_INTERVAL_IN_MILLISECONDS,
+  onError: (error) => (errorMessage = error),
+});
 
-  if (data?.error) {
-    errorMessage = data.error;
-    return;
-  }
+if (!leaderboardData && !statsData) return;
 
-  leaderboard = data.data; // Setting the state with the fetched data
-  latency = data.statistics?.elapsed; // Setting the state with the query latency from Tinybird
+if (leaderboardData?.error || statsData?.error) {
+  errorMessage = leaderboardData?.error || statsData?.error;
+  return;
+}
+leaderboard = leaderboardData.data;
+latency = leaderboardData.statistics?.elapsed; // Assuming latency is in leaderboard response
 
-  return (
-    <Card>
-      <Title>Real-time leaderboard</Title>
-      <Subtitle>Updating in real-time with Tiny Flappybird events</Subtitle>
+stats = statsData.data; // Assuming the first element in "data" contains stats
+// stats latency?
+
+return (
+    <div className="grid grid-cols-1 gap-4">
+      {/* Card for Leaderboard */}
       {leaderboard && (
-        <Table className="mt-4" spacing="compact">
+        <Card>
+          <Title>Real-time leaderboard</Title>
+          <Subtitle>Updating in real-time with Tiny Flappybird events</Subtitle>
+          <Table className="mt-4" >
           {/* Table Head */}
           <TableHead>
             <TableRow>
@@ -46,13 +58,31 @@ export default function Dashboard() {
           {/* Table Body */}
           <tbody>
             {leaderboard.map((player) => (
-              <TableRow key={player.player_id}>
+              <TableRow key={player.rank}>
                 <TableCell>{player.player_id}</TableCell>
                 <TableCell>{player.total_score}</TableCell>
               </TableRow>
             ))}
           </tbody>
         </Table>
+        </Card>
+      )}
+      {/* Card for Stats */}
+      {stats && (
+        <Card>
+          <Title>Real-time stats</Title>
+          <Subtitle>Fetched from Tinybird API</Subtitle>
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            <Card>
+              <Title>Players</Title>
+              <Text className="text-xl font-bold">{stats?.players}</Text>
+            </Card>
+            <Card>
+              <Title>Games Played</Title>
+              <Text className="text-xl font-bold">{stats?.games}</Text>
+            </Card>
+          </div>
+        </Card>
       )}
       {latency && <Text>Latency: {latency * 1000} ms</Text>}
       {errorMessage && (
@@ -63,6 +93,6 @@ export default function Dashboard() {
           <p className="text-sm">Check your console for more information</p>
         </div>
       )}
-    </Card>
+    </div>
   );
 }
