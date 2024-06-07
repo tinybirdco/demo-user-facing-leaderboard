@@ -1,4 +1,4 @@
-TOKEN "get_stats_endpoint_read_4588" READ
+TOKEN "get_stats_endpoint_read" READ
 
 NODE endpoint
 SQL >
@@ -9,7 +9,7 @@ SQL >
     ),
     game_count AS (
       SELECT COUNT(*) AS games
-      FROM flappy_tinybird_workshop.events_api
+      FROM game_events
       WHERE type == 'game_over'
     )
     SELECT players, games
