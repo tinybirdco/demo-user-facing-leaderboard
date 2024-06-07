@@ -1,0 +1,10 @@
+
+SCHEMA >
+    `event` String `json:$.event`,
+    `name` String `json:$.name`,
+    `session_id` String `json:$.session_id`,
+    `timestamp` String `json:$.timestamp`,
+    `type` String `json:$.type`
+
+ENGINE "MergeTree"
+ENGINE_SORTING_KEY "session_id, timestamp, type"
