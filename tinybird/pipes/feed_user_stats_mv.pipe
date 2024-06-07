@@ -10,7 +10,7 @@ SQL >
         countIfState(type = 'purchase') AS purchases,
         minState(timestamp) AS start_ts,
         maxState(timestamp) AS end_ts
-    FROM flappy_tinybird_workshop.events_api
+    FROM games_events
     GROUP BY
         event,
         player_id,
