@@ -17,8 +17,8 @@ import { getEndpointUrl } from "@/utils";
 import { useFetcher } from "@/hooks/useFetch";
 import { useState } from "react";
 
-const REFRESH_INTERVAL_IN_MILLISECONDS = 10000; // one seconds
-const PIPE_ID = "leaderboard"; // The name of the pipe you want to consume
+const REFRESH_INTERVAL_IN_MILLISECONDS = 10000; // milliseconds
+const PIPE_LEADERBOARD_ID = "leaderboard"; // The name of the pipe you want to consume
 const PIPE_STATS_ID = "get_stats"; // The name of the pipe you want to consume
 
 export default function Dashboard() {
@@ -26,14 +26,14 @@ export default function Dashboard() {
   const [refreshInterval, setRefreshInterval] = useState(
     REFRESH_INTERVAL_IN_MILLISECONDS
   );
-  const fetcher = useFetcher(PIPE_ID); // This fetcher handles the token revalidation
+  const fetcherLeaderboard = useFetcher(PIPE_LEADERBOARD_ID); // This fetcher handles the token revalidation
   const fetcherStats = useFetcher(PIPE_STATS_ID); // This fetcher handles the token revalidation
 
   // Initializes variables for storing data
   let leaderboard, latency, errorMessage;
 
   // Using SWR hook to handle state and refresh result every second
-  const { data, mutate } = useSWR(getEndpointUrl("leaderboard"), fetcher, {
+  const { data, mutate } = useSWR(getEndpointUrl("leaderboard"), fetcherLeaderboard, {
     refreshInterval: () => {
       return refreshInterval;
     },
@@ -119,7 +119,7 @@ export default function Dashboard() {
           </div>
         </div>
         {leaderboard && (
-          <Table className="my-4" spacing="compact">
+          <Table className="my-4">
             {/* Table Head */}
             <TableHead>
               <TableRow>
@@ -136,7 +136,7 @@ export default function Dashboard() {
             </TableHead>
             {/* Table Body */}
             <tbody>
-              {leaderboard.map((player, i) => (
+              {leaderboard.map((player: any, i: number) => (
                 <TableRow key={player.rank}>
                   <TableCell className="border py-1 px-2 text-center w-12">
                     {player.rank}
