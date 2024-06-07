@@ -1,4 +1,3 @@
-
 SCHEMA >
     `name` String,
     `session_id` String,

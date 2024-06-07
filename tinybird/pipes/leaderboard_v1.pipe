@@ -8,7 +8,7 @@ SQL >
         timestamp,
         session_id,
         event
-    FROM flappy_tinybird_workshop.events_api 
+    FROM game_events
     WHERE type = 'score'
     AND event =={{ String(event_param, 'workshop_2024_06_11', description="Event to filter on") }}
 
