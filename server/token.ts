@@ -7,7 +7,10 @@ const WORKSPACE_ID = process.env.TINYBIRD_WORKSPACE ?? ""; // Get this ID by run
 
 // Server function that generates a JWT
 // All the Tinybird related data won't be visible in the browser
-export async function generateJWT(pipe: string) {
+export async function generateJWT(
+  pipe: string,
+  params: Record<string, any> = {}
+) {
   const next10minutes = new Date();
   next10minutes.setTime(next10minutes.getTime() + 1000 * 60 * 10);
 
@@ -19,6 +22,7 @@ export async function generateJWT(pipe: string) {
       {
         type: "PIPES:READ",
         resource: pipe,
+        fixed_params: params,
       },
     ],
   };

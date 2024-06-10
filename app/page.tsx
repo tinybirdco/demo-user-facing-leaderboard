@@ -11,13 +11,14 @@ import {
   TableCell,
   NumberInput,
   Button,
+  TextInput,
 } from "@tremor/react";
 import useSWR from "swr";
 import { getEndpointUrl } from "@/utils";
 import { useFetcher } from "@/hooks/useFetch";
 import { useState } from "react";
 
-const REFRESH_INTERVAL_IN_MILLISECONDS = 10000; // milliseconds
+const REFRESH_INTERVAL_IN_MILLISECONDS = 1000; // one second in milliseconds
 const PIPE_LEADERBOARD_ID = "leaderboard"; // The name of the pipe you want to consume
 const PIPE_STATS_ID = "get_stats"; // The name of the pipe you want to consume
 
@@ -26,19 +27,27 @@ export default function Dashboard() {
   const [refreshInterval, setRefreshInterval] = useState(
     REFRESH_INTERVAL_IN_MILLISECONDS
   );
-  const fetcherLeaderboard = useFetcher(PIPE_LEADERBOARD_ID); // This fetcher handles the token revalidation
+
+  const fetcherLeaderboard = useFetcher(PIPE_LEADERBOARD_ID, {
+    player_id: user,
+  }); // This fetcher handles the token revalidation
   const fetcherStats = useFetcher(PIPE_STATS_ID); // This fetcher handles the token revalidation
 
   // Initializes variables for storing data
   let leaderboard, latency, errorMessage;
 
   // Using SWR hook to handle state and refresh result every second
-  const { data, mutate } = useSWR(getEndpointUrl("leaderboard"), fetcherLeaderboard, {
-    refreshInterval: () => {
-      return refreshInterval;
-    },
-    onError: (error) => (errorMessage = error),
-  });
+  // The first call is not executed until the user enters a username
+  const { data, mutate } = useSWR(
+    user ? getEndpointUrl("leaderboard") : null,
+    fetcherLeaderboard,
+    {
+      refreshInterval: () => {
+        return refreshInterval;
+      },
+      onError: (error) => (errorMessage = error),
+    }
+  );
 
   // Using SWR hook to handle state and refresh result every second
   const { data: statsData, mutate: mutateStats } = useSWR(
@@ -52,27 +61,39 @@ export default function Dashboard() {
     }
   );
 
-  if (!data) return;
-
   if (data?.error) {
     errorMessage = data.error;
-    return;
   }
 
-  leaderboard = data.data; // Setting the state with the fetched data
-  latency = data.statistics?.elapsed; // Setting the state with the query latency from Tinybird
-
-  if (!statsData) return;
+  leaderboard = data?.data; // Setting the state with the fetched data
+  latency = data?.statistics?.elapsed; // Setting the state with the query latency from Tinybird
 
   if (statsData?.error) {
     errorMessage = statsData.error;
-    return;
   }
 
-  const stats = statsData.data[0];
+  const stats = statsData?.data[0];
 
   return (
     <>
+      <Card className="w-full mb-4">
+        <Title className="mb-2">First, enter your user</Title>
+        <form
+          className="flex gap-2 mb-2"
+          onSubmit={(e: any) => {
+            e.preventDefault();
+            setUser((e.target.user as HTMLInputElement).value);
+          }}
+        >
+          <TextInput placeholder="Your user" name="user" />
+          <Button>Submit</Button>
+        </form>
+        {user && (
+          <p>
+            Current user: <strong>{user}</strong>
+          </p>
+        )}
+      </Card>
       <Card className="w-full">
         <div className="flex justify-between">
           <div>
@@ -100,24 +121,26 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="flex justify-around my-8 text-center">
-          <div>
-            <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-              Players
-            </p>
-            <p className="text-4xl text-tremor-content-strong dark:text-dark-tremor-content-strong font-semibold">
-              {stats.players}
-            </p>
+        {stats && (
+          <div className="flex justify-around my-8 text-center">
+            <div>
+              <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
+                Players
+              </p>
+              <p className="text-4xl text-tremor-content-strong dark:text-dark-tremor-content-strong font-semibold">
+                {stats.players}
+              </p>
+            </div>
+            <div>
+              <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
+                Games
+              </p>
+              <p className="text-4xl text-tremor-content-strong dark:text-dark-tremor-content-strong font-semibold">
+                {stats.games}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-              Games
-            </p>
-            <p className="text-4xl text-tremor-content-strong dark:text-dark-tremor-content-strong font-semibold">
-              {stats.games}
-            </p>
-          </div>
-        </div>
+        )}
         {leaderboard && (
           <Table className="my-4">
             {/* Table Head */}
@@ -137,7 +160,10 @@ export default function Dashboard() {
             {/* Table Body */}
             <tbody>
               {leaderboard.map((player: any, i: number) => (
-                <TableRow key={player.rank}>
+                <TableRow
+                  key={player.rank}
+                  className={player.player_id === user ? "bg-green-100 font-bold" : ""}
+                >
                   <TableCell className="border py-1 px-2 text-center w-12">
                     {player.rank}
                   </TableCell>
