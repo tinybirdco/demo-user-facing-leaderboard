@@ -53,6 +53,6 @@ Run it locally:
 npm run dev
 ```
 
-Then open [http://localhost:3000](http://localhost:3000) with your browser. Your leaderboard won't have any data in it yet, so [read the tutorial]() to learn how to generate real-time data and populate it:
+Then open [http://localhost:3000](http://localhost:3000) with your browser. Your leaderboard won't have any data in it yet, so [read the tutorial](https://www.tinybird.co/docs/guides/tutorials/leaderboard) to learn how to generate real-time data and populate it:
 
 ![image](./images/leaderboard.png)
