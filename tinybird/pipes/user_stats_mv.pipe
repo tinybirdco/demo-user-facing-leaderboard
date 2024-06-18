@@ -1,0 +1,20 @@
+NODE populate_mv
+SQL >
+
+    SELECT
+        event,
+        name AS player_id,
+        session_id,
+        countIfState(type = 'score') AS scores,
+        countIfState(type = 'game_over') AS games,
+        countIfState(type = 'purchase') AS purchases,
+        minState(timestamp) AS start_ts,
+        maxState(timestamp) AS end_ts
+    FROM games_events
+    GROUP BY
+        event,
+        player_id,
+        session_id
+
+TYPE materialized
+DATASOURCE user_stats_mv

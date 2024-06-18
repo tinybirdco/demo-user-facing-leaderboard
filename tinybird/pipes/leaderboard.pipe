@@ -14,7 +14,7 @@ SQL >
             session_id,
             countMerge(scores) AS total_score,
             maxMerge(end_ts) AS t
-        FROM user_stats_mv
+        FROM user_stats
         GROUP BY player_id, session_id
         ORDER BY rank
 

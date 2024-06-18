@@ -1,4 +1,4 @@
-# Data Source created from Pipe 'feed_user_stats_mv'
+# Data Source created from Pipe 'user_stats_mv'
 
 SCHEMA >
     `event` String,

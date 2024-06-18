@@ -5,7 +5,7 @@ SQL >
 
     WITH player_count AS (
       SELECT COUNT(DISTINCT player_id) AS players
-      FROM user_stats_mv
+      FROM user_stats
     ),
     game_count AS (
       SELECT COUNT(*) AS games
