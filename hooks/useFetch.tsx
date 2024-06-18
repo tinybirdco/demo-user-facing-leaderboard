@@ -1,12 +1,12 @@
 import { generateJWT } from "@/server/token";
 import { useState } from "react";
 
-export function useFetcher(pipe: string) {
+export function useFetcher(pipe: string, params: Record<string, any> = {}) {
   const [token, setToken] = useState("");
 
   // Generate a new JWT token and store the new token in the state
   const refreshToken = async () => {
-    const newToken = await generateJWT(pipe);
+    const newToken = await generateJWT(pipe, params);
     setToken(newToken);
     return newToken;
   };
