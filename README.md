@@ -14,7 +14,12 @@ You can read more about JWTs in Tinybird in the [documentation](https://www.tiny
 
 - Node.js >= v18
 - A [free Tinybird account](https://tinybird.co)
-- Deploy the [Tinybird resources](/tinybird) to a Tinybird Workspace
+
+### Setup
+
+1. Clone this repo.
+2. Create a new Tinybird Workspace.
+3. Deploy the `/datasources` and `/pipes` [Tinybird resources](/tinybird) to the Tinybird Workspace (drag and drop the files in the Tinybird UI), thereby creating 2 x Data Sources and 3 x Pipes.
 
 ### Install dependencies
 
@@ -27,8 +32,9 @@ npm install
 ### Add your Tinybird parameters
 
 First create a new file `.env.local`
+
 ```bash
-cp .env.example .env.local
+touch .env.local
 ```
 
 You need to copy your Tinybird host and token to the `.env.local` file in your directory:
@@ -47,6 +53,6 @@ Run it locally:
 npm run dev
 ```
 
-Then open [http://localhost:3000](http://localhost:3000) with your browser.
+Then open [http://localhost:3000](http://localhost:3000) with your browser. Your leaderboard won't have any data in it yet, so [read the tutorial](https://www.tinybird.co/docs/guides/tutorials/leaderboard) to learn how to generate real-time data and populate it:
 
 ![image](./images/leaderboard.png)
