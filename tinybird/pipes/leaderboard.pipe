@@ -38,18 +38,16 @@ NODE endpoint
 SQL >
 
     SELECT *
-        FROM
-            (
-                SELECT rank, player_id, session_id, total_score
-                FROM rank_games
-                WHERE
-                    (player_id, session_id)
-                    NOT IN (SELECT player_id, session_id FROM last_game)
-                LIMIT 10
-                UNION ALL
-                SELECT rank, player_id, session_id, total_score
-                FROM last_game
-            )
-        ORDER BY rank ASC
+    FROM
+        (
+            SELECT rank, player_id, session_id, total_score
+            FROM rank_games
+            WHERE (player_id, session_id) NOT IN (SELECT player_id, session_id FROM last_game)
+            LIMIT 10
+            UNION ALL
+            SELECT rank, player_id, session_id, total_score
+            FROM last_game
+        )
+    ORDER BY rank ASC
 
 
