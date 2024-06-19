@@ -17,4 +17,4 @@ SQL >
         session_id
 
 TYPE materialized
-DATASOURCE user_stats_mv
+DATASOURCE user_stats
